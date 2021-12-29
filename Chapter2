@@ -1,0 +1,59 @@
+Chap 2:
+
+10 Mbps - Ethernet - 10BASE-T - 802.3 - Copper, 100m
+100 Mpbs - Fast Ethernet - 100BASE-T - 802.3u - Copper, 100m
+1000 Mpbs - Gigabit Ethernet - 1000BASE-LX - 802.3z - Fiber,5000m
+1000 Mpbs - Gigabit Ethernet - 1000BASE-T - 802.3ab - Copper, 100m
+10 Gbps - 10 Gig Ethernet - 10GBASE-T - 802.3an - Copper, 100m
+
+Ethernet LAN: It is a combination of user devices, LAN switches, and different kinds of cabling. Each link can use different types of cables, at different speeds. 
+utp = Unshielded twisted pair cabling
+encoding scheme: The speaker and listener share the same language, and can act based off it.(Using binary, the speaker and listener can encode using 0s and 1s.)
+EMI = Electromagnetic interference
+The RJ-45 connector has 8 locations for the wires to go, otherwise known as pins. 
+
+GBIC ( Gigabit Ethernet Interface Converter ): The original form factor for a removable transciever for Gigabit interfaces; larger tan SFPs
+SFP ( Small Form Pluggable ): The replacement of GBICs, used on Gigabit interfaces, with a smaller size, taking less space on the side of the networking card or switch. 
+SFP+ ( Small Form Pluggable Plus ): Same size as the SFP, but used on 10-Gbps interfaces. The plus refers to the increased speed compared to SFPs.
+
+Ethernet NIC : transmitters use pairs connected to pins 1 and 2: The NIC recievers use the pair of wires connected at pins 3 and 6.
+Lan Switches do the opposite, their receivers work at pins 1 and two: and their transmitters work at pins 3 and 6
+
+Ethernet straight through cable connects wires at pin 1 to 1, pin 2 to 2, pin 3 to 3, and so on.
+Crossover Cable: Pins:, 2 to 6, 3 to 1, and 6 to 2.
+
+Crossover cable: If the endpoints transmit on the same pin pair
+Straight through cable: If the endpoints transmit on different pin pairs
+
+Switch to PC = Straight through cables
+Switch to switch = Cross over cables
+
+Multimode Fiber cabling: Improves the max distance over UTP, less expansive
+Single mode fiber cabling: LARGE distances, more expansive
+
+10GBASE-S - MM - 400m
+10GBASE-LX4 - MM - 300m
+10GBASE-LR - SM - 10km
+10GBASE-E - SM - 30km
+
+Ethernet Header and Trailer Fields:
+Preamble, 7 bytes, used for synchronization
+Start Frame Delimiter (SFD), 1 bytes, signifies that the next byte begins the Destination MAC Address field
+Destination MAC Address, 6 Bytes, Identifies the intended recipient of this frame
+Source MAC Address, 6 bytes, identifies the sender of the frame
+Type, 2 bytes, Defines the type of protocol listed inside the frame
+Data and Pad, 46-1500 bytes, Holds data from a higher layer and then adds padding to the data to meet length requirement of 46 bytes
+Frame check sequence (FCS), 4 bytes, Provides a method for the receiving NIC to determine whether the frame experienced transmission errors. 
+
+Burned in address: the 6-byte address assigned by the vendor making the card
+Unicast address: A term for a MAC address that represents a single LAN interface.
+Broadcast address: An address tat means "all devices that reside on this LAN right now".
+Multicast address: On Ethernet, a multicast address implies some subset of all devices currently on the Ethernet LAN. 
+
+FCS: Frame check sequence, in the ethernet trailer, compares results with the sender, to discover whether errors occurred in the frame. 
+Half Duplex: The device must wait to send if it i currently receiving a frame; in other words, it cannot send and receive at the same time. 
+Full Duplex: The device does not have to wait before sending; it can send and receive at the same time
+
+hubs = half duplex, switches = full duplex
+
+Half duplex uses CSMA/CD which is Carrier sense multiple access Collision Detection. Sends an alert to all nodes after a collision and stops sending. Gives a random time to wait before trying again. 
