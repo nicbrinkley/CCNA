@@ -1,0 +1,30 @@
+Chap 4:
+To set a password in the cli, type #enable secret (Password)
+conf mode = conf t
+interface mode = int type/number (int fa0/1)
+VLAN mode = VLAN number 
+Console line Mode = line console 0
+VTY Line Mode: line vty 0 15
+Switches contain RAM, Flash memory, ROM, and NVRAM
+
+RAM = Sometimes called DRAM, for dynamic random access memory. RAM is used by the switch just as it is used by any other computer. For working storage. The running active config file is stored here. 
+Flash Memory: Either a chip inside the switch or a removable memory card, flash memory stores fully functional cisco IOS images and is the default location where the switch gets its cisco ios at boot time. Flash memory can also store backup copies of configuration files 
+ROM: Read only memory stores a bootstrap prograrm that is loaded when the switch first powers on. This bootstrap program then finds the full Cisco IOS image and manages the process of loading Cisco IOS onto RAM.
+NVRAM: Nonvolatile RAM stores the initial or startup configuration file that is used when the switch is first powered on and when the switch is reloaded. 
+
+startup-config: stores the initial configuration used anytime the switch reloads Cisco IOS. It is stored in the NVRAM
+running-config: Stores the currently used configuration commands. This file changes dynamically when someone enters commands in conf mode. It is stored in RAM.
+
+copy running-config startup-config       backs up the running config to the startup config file. The command overwrites the current startup-config file with what is currently running.
+
+You can get rid of all existing configuration and start over with a clean config. To do that, you can erase the startup-config file using these three commands.... 
+write erase
+erase startup-config
+erase nvram
+
+Once erased, you can reload or power off/on the switch. 
+
+no debug all
+undebug all 
+
+^^^ these two commands enabe mode exec command to disable all currently enabled debugs. 
