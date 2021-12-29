@@ -1,0 +1,153 @@
+STP = Spanning Tree Protocol 
+RSTP = Rapid STP
+
+RSTP is the more updated version of STP used as Default by most current Cisco Switches
+STP/RSTP prevents looping frames by adding additional check on each interface before a switch uses it to send or receive user traffic. That check: If the port Is in STP/RSTP forwarding state in that VLAN, use it as normal; if it is in STP/RSTP blocking state, however, block all user traffic and do not send or receive user traffic on that interface in that VLAN. 
+
+STP/RSTP do not change any states of the port, instead adding an additional state with the blocking state basically disabling the interface. 
+
+Just one looping frame causes what is called a Broadcast Storm: Happens when any kind of ethernet frames loop around a LAN indefinitely. Broadcast storms can saturate all the links with copies of that one single frame, crowding out good frames, as well as significantly impacting end user device performance by making the PCs process too many broadcast frames. 
+
+The broadcast storm cases a problem called MAC table instability. This means that the switches MAC address tables keep changing because frames with the same source MAC arrive on different ports. 
+
+Broadcast storms: The forwarding of a frame repeatedly on the same links, consuming significant parts of the links capacities
+
+MAC table instability: The continual updating of a switch's MAC address table with the incorrect entries in reaction to looping frames, resulting in frames being sent to the wrong locations. 
+
+Multiple frame transmission: A side effect of looping frames in which multiple copies of one frame are delivered to the intended host, confusing the host. 
+
+STP/RSTP prevents loops by placing each switch port in either a forwarding state or a blocking state. 
+
+STA = Spanning Tree Algorithm
+ For simplification, STP picks which interfaces should forward, and if any interfaces are left over, they go into a blocking state. 
+The following Criteria is used…
+
+STP/RSTP elects a root switch. STP puts all the working interfaces on the root switch in forwarding state. 
+
+Each nonroot switch considers one of its ports to have the least administrative cost between itself and the root switch. The cost is called that switch's root cost. STP/RSTP places its port that is part of the least root cost path, called that switch's root port, (RP) in forwarding state. 
+
+Many switches can attach to the same Ethernet segment, but due to the fact that links connect two devices, a link would have at most two switches. With two switches on a link, the switch with the lowest root cost, as compared with the other switches attached to the same link, is placed in forwarding state. That switch is the designated switch, and that Switch's interface attached to the segment is called the DP (Designated port) 
+
+All other interfaces are placed in blocking state. 
+
+Characterization of Port	STP State	Description
+All the root switch's ports	Forwarding	The root switch is always the designated switch on all connected segments
+Each nonroot switchs root	forwarding	The port through which the switch has the least cost to reach the root switch
+Each LANs designated port	Forwarding	The switch forwarding the Hello on to the segment, with the lowest root cost, is the designated switch for that segment
+All other working ports	Blocking	The port is not used for forwarding user frames, nor are any frames received on these interfaces considered for forwarding
+
+BPDU = Bridge protocol Data units. Used by switches to exchange information with each other. 
+
+Field 	Description
+Root Bridge ID	The Bridge ID of the switch the sender of this Hello currently believes to be the root switch
+Sender's bridge ID	The bridge ID of the switch sending this Hello BPDU
+Sender root cost	The STP/RSTP cost between this switch and the current root
+Time values on the root switch	Includes the Hello timer, MaxAge timer, and forward delay timer
+
+Elects a root switch based on the Root Bridge ID in the BPDUs.
+Root switch is the switch with the loswest numeric value for the BID. 
+LOWEST PRIORITY = Winner for Root switch
+If a tie occurs, the switch with the lowest MAC address portion of the BID is the root.
+
+When a switch sends a hello message and it goes through each and every switch, it compares the BID, and if the switch sending the hello is lower, the switch receiving stands down and forwards the hello request. Eventually, every switch will has a priority rating and the lowest priority will be the root switch.
+
+The second process of STP/RSTP occurs when each nonroot switch chooses its one and only root port. A switchs RP is its interface through which it has the least STP/RSTP cost to reach the root switch. (Least root cost)
+
+The switches that are NON root switches calculate the cost of which to send packets. Then, it will choose the least cost path to send packets to the root switch. If SW3 was linked directly to SW1 with a cost of 5, and SW3 was linked to SW2 THEN to SW1 with a cost of 8 (SW3 -> SW2 = cost of 4 plus cost of SW2 to SW1 which is 4, equaling 8) it will choose the interface port Gi0/1, the cost of 5 because lowest priority wins. 
+
+Each Hello BPDU also has a cost integer that the switch looks at to remember the cost of the port. They use this to calculate best root. 
+
+If a tie breaker occurs, the switch…
+
+	1. Chooses based on the lowest neighbor bridge ID
+	2. Chooses based on the lowest neighbor priority
+	3. Chooses based on the lowest neighbor internal port number
+
+The final step of STP is to choose the STP/RSTP designated port on each LAN segment. The designated port on each LAN segment is the switch port that advertises the lowest cost Hello onto a LAN segment. In effect, the switch with the lower cost to reach the root, among all switches, becomes the DP on that segment. 
+Ethernet Speed	IEEE Cost	IEEE Cost (2004 and after)
+10 mbps	100	2,000,000
+100 mbps	19	200,000
+1 gbps	4	20,000
+10 gbps	2	2000
+100 gbs	N/A	200
+1Tbps	N/A	20
+
+Step 1: The root creates and sends a Hello BPDU with a root cost of 0, out all its working interfaces
+step 2: The nonroot switch receive the Hello on their root ports. After changing the Hello to list their own BID as the senders BID and listing that switchs root cost, the switch forwards the Hello out of all designated ports.
+Step 3: Steps 1 and 2 repeat until something changes. 
+
+STP TIMERS
+
+Timer	Default Value	Description
+Hello	2 seocnds	The time period between Hellos created by the root.
+MaxAge 	10 times Hello	How long any switch should wait, after ceasing to hear hellos, before trying to change the STP topology
+Forward Delay	15 seconds	Delay that affects the process that occurs when an interface changes from blocking state to forwarding state. A port stays in an interim listening state, and then an interim learning state, for the number of seconds defined by the forward delay timer. 
+
+STP uses the idea of roles and states. 
+Roles = like root port and designated port, related to how STP analyzes the LAN topology. 
+States = like forwarding and blocking, tell a switch whether to send or receive frames. 
+
+When STP converges, a switch chooses new port roles and the port roles determine the state of forwarding or blocking. 
+
+Listening stage: Like the blocking state, the interface does not forward frames. The switch removes old stale (unused) MAC table entries for which no frames are received from each MAC address during this period. These stale MAC table entries could be the cause of the temp loops
+
+Learning stage: Interfaces in this state still do not forward frames, but the switch begins to learn the MAC addresses of frames received on the interface. 
+
+Blocking > Listening > learning > Forwarding
+An interface changing from blocking to forwarding requires 30 seconds to transition.
+
+State	Forwards Data Frames?	Learns MACs based on received frames?	Transitory or stable state?
+Blocking	No	No	Stable
+Listening	No	No	Transitory
+Learning	No	Yes	Transitory
+Forwarding	Yes	Yes	Stable
+Disabled	No	No	Stable
+
+Comparing STP and RSTP:
+
+RSTP and STP elect the root switch using the same rules and tiebreakers
+RSTP and STP switches select their root ports with the same rules 
+RSTP and STP switches elect designated ports on each LAN segment with the same rules and tiebreakers.
+RSTP and STP place each port in either forwarding or blocking state, although RSTP calls the blocking state the discarding state. 
+
+RSTP refer to alternate ports and backup ports. Alternate ports are ports that can take over root port in case of failure. Backup ports provides a backup port on the local switch for a designated port.
+
+Port Roles in RSTP
+
+Function	Port Role
+Port that begins a nonroot switches best path to the root	Root port
+Port that replaces the root port when the root port failes	Alternate port
+Switch port designated to forward onto a collision domain	Designated port
+Port that replaces a designated port when a designated port fails	Backup port
+Port that is administratively disabled	Disabled port
+	
+ 
+STP and RSTP Port States compared
+Function	STP State	RSTP State
+Port is admin disabled	Disabled	Discarding
+Stable state that ignores incoming data frames and is not used to forward data frames	Blocking	Discarding
+Interim state without MAC learning and without forwarding	Listening	Not used
+Interim state with MAC learning and without Forwarding	Learning	Learning
+Stable state that allows MAC learning and forwarding of data frames	Forwarding	Forwarding
+
+BPDU Guard: Defeats problems by disabling a port if any BPDUs are received on the port. This feature is useful on ports that should be only used as an access port and never connected to another switch. 
+
+Port fast should only be enabled on access ports that connect to user devices, not to other LAN switches. BPDU Guard can help prevent any loops. If you accidently connect a switch to the access port, it will automatically disable the port before a loop is created. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
