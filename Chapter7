@@ -1,0 +1,41 @@
+Configurations for speed/duplex/description and displaying interface status is on CLI commands
+
+auto negotiation : can be set by just leaving the speed and duplex at the default setting, and let the switch port negotiate what settings to use on each port. 
+auto negotiation under working conditions: Ethernet devices on the ends of a link must use the same standards, otherwise they cannot correctly send data. A NIC wouldn't work if one end uses 100BASE-T and the other uses a 1000BASE-T.
+
+IEEE standard 802.3u defines a protocol that lets the two UTP based ethernet nodes on a link negotiate so that they choose to use the same speed and duplex settings. Basically, each node states what it can do, and then each node picks the best options that both nodes support. The fastest speed and the best duplex settings, with full duplex being better than half duplex. 
+
+A lot of network engineers disable auto negotiation mode to help set statically assigned duplex/speed modes. However, doing this could cause mistakes if you don't know what nodes operate speed/duplex wise. 
+
+Cisco switches : Sense the speed without using autonegotiation, but if that fails, use the IEEE default (slowest supported speed, often 10mbps)
+Uses the IEEE defaults: if speed= 10 or 100, use half duplex. otherwise, use full duplex. 
+
+Lan Switch interface Status codes:
+
+Line Status/protocol status/interface status/typical root cause:
+
+admin down - down - disabled - The shutdown command is configured on the interface
+down - down - notconnect - No cable. Bad cable. Wrong cable pinouts. Speed mismatch. Device powered off. shutdown, or error disabled
+up - down - notconnect - Not expected on LAN switch physical interface
+down - down (err disabled) - errdisabled - port security has disabled the interface 
+up - up - connected - the interface is working 
+
+To identify duplex mismatch problems, check the duplex setting on each end of the link to see if the values mismatch
+CRC = Cyclic redundancy check is a term related to how the frame check sequence (FCS) math detects an error
+
+Runts: Frames that did not meet the min frame size requirements. can be caused by collisions. 
+Giants: Frames that exceed the max frame size requirement
+Input errors: A total of many counters including runts, giants, no buffer, CRC, frame, overrun, and ignored counts
+CRC: Received frames that did not pass the FCS math
+Frame: Received frames that have an illegal format, for example, ending with a partial byte. 
+Packet Output: Total number of packets forwarded out the interface
+Output errors: Total number of packets that the switch port tried to transmit, but for which some problem occurred
+Collisions: Counter of all collisions that occur when the interface is transmitting a frame. 
+Late collisions: the subset of all collisions that happen after the 64th byte of the frame has been transmitted. 
+ALL COLLIIONS SHOULD OCCUR BY THE END OF THE 64rth BYTE
+
+
+
+
+
+
