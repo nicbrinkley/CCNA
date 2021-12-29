@@ -1,0 +1,50 @@
+PVST+ = STP Based Per VLAN Spanning tree Plus= Creates one spanning tree instance per VLAN
+
+RPVST+ = Rapid PVST+ = RSTP, one tree per vlan
+
+MSTP = Multiple Spanning Tree Protocol
+
+Name	Based on STP or RSTP?	#Trees	Original IEEE standard	Config Parameter
+STP	STP	1 CST	802.1D	N/A
+PVST+	STP	1/VLAN	802.1D	pvst
+RSTP	RSTP	1 CST	802.1w	N/A
+Rapid PVST+	RSTP	1/VLAN	802.1w	rapid-pvst
+MSTP	RSTP	1 or more	802.1s	mst
+
+System ID Extension = 4 bits Priority + 12 bits System ID Extension (Holds VLAN ID) + 6 bytes System ID (mac Address)
+
+You can choose priority on a CLI by typing # spanning-tree vlan 1 priority ?
+
+To configures switches to a root switch, type: spanning-tree vlan x root primary (on the primary switch) or….
+spanning-tree vlan x root secondary (on the secondary switch)
+
+Switch Priority: The global command spanning-tree vlan x priority y lets an engineer set the switches priority on the vlan
+
+Port Costs: spanning-tree vlan x cost y lets an engineer set the switches STP/RSTP cost on that port, either for all vlans or for a specific vlan on that port. 
+
+Etherchannel: Two switches can treat multiple parellel links between each other as a single logical link called an EtherChannel. 
+
+HOW TO CONFIGURE ETHERCHANNEL:
+
+	1. Add the channel-group number mode on command in interface conf t under each physical interface that should be in the channel to add it to the channel.
+	2. Use the same number for all commands on the same switch, but the channel-group number on the neighboring switch can differ. 
+
+PAgP = Port Aggregation Protocol = Up to 8 links supported = desirable and auto keywords
+LACP = Link Aggregation Control Protocol = up to 16 links supported = active and passive keywords
+
+Switches check settings on neighbor switches by using PAgP or LACP OR use CDP = Cisco Discovery Protocol
+
+EtherChannel Load Distribution Methods
+Configuration Keyword	Math users	Layer
+src-mac	Source MAC Address	2
+dst-mac	Destination MAC address	2
+src-dst-mac	Both source and destination MAC	2
+src-ip	Source IP address	3
+dst-ip	Destination IP Address	3
+src-dst-ip	Both source and destination IP addresses	3
+src-port	Source TCP or UDP port	4
+dst-port	Destination TCP or UDP port	4
+src-dst-port	Source and destination TCP or UDP port	4
+
+
+test etherchannel load-balance (EXEC COMMAND)
