@@ -1,0 +1,47 @@
+Chap 1:
+SNA = System Network Architecture. Published by IBM, back in the 70s.
+OSI Model = Open Systems Interconnection
+RFC = Request for comments
+IEEE = institute of Electrical and Electronic Engineers
+
+TCP/IP Model: Application, Transport, Network, Data Link, anad Physical Layers. 
+Application: HTTP, POP3, SMTP
+Transport: TCP,UDP
+Internet: IP/ICMP
+Data Link & Physical: Ethernet, 802.11 (Wifi)
+
+HTTP = Hypertext Transfer Protocol
+URI = Universal Resource Identifiers
+
+1. Sends header with GET File. 
+2. Response with a return code (200 OK for ex)
+3. Data packet with file/request
+
+TCP Error Recovery basics looks at SEQ (sequence) #s of the requests, and if one is missing or corrupt, it will send a TCP segmant back to the sender saying (Send again)
+
+Adjacent-layer interaction: On a single computer, one lower layer provides a service to the layer just above. The software or hardware that implements the higher layer requests that the next lower layer performs the needed function.
+Same-layer interaction: The two computers use a protocol to communicate with the same layer on another computer. The protocol defines a header that communicates what each computer wants to do. 
+
+Using ethernet to forward an ip packet to a router.
+1. Encapsulates the IP packet between an ethernet header and ethernet trailer, creating an ethernet frame.
+2. Larry physically transmits the bits of this ethernet frame using electricity flowing over the ethernet cabling. 
+3. Router R1 physically receives the electrical signal over a cable and re-creates the same bits by interpreting the meaning of the electrical signals. 
+4. router R1 de-capsulates the IP packet from the Ethernet frame by removing and discarding the ethernet header and trailer. 
+
+Data Encapsulation Terminology: 
+TCP/IP Host sending data:
+1. Create and encapsulate the application data with any required application layer headers.
+2. Encapsulate the data supplied by the application layer inside a transport layer header.
+3. Encapsulate the data supplied by the transport layer inside a network layer (IP) header. 
+4. Encapsulate the data supplied by the network layer inside a data-link layer.
+5. Transmit the bits.
+
+1. [Data]					Application Layer
+2. [TCP][Data]				Transport Layer 
+3. [IP][TCP][Data]			Network Layer 
+4. [Data link][IP][TCP][Data]	Data Link Layer
+5. Transmit the bits			Physical Layer
+
+Segment = [TCP][Data]
+Packet = [IP][Data]
+Frame = [LH][Data][LT]   (Layer Header/Trailer)
