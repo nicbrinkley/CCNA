@@ -1,0 +1,114 @@
+Routing protocols: OSPF, RIP, EIGRP, BGP
+
+Convergence = Advertising some routes have failed and pick a new currently best route
+Convergence happens when a topology chages - that is, when either a router or link fails or comes back up again. 
+
+IGP: Interior Gateway protocol, A routing protocol that was designed and intended for use inside a single autonomous system (AS).
+
+EGP: Exterior Gateway protocol, A routing protocol that was designed and intended for use between different autonomous systems. 
+
+Both definitions have Gateway, we see that gateway really means routers (gateways used to be the name for routers)
+
+AS: Autonomous System, is a network under the admin control of a single organization. 
+
+ASN = AS number, given to Autonomous systems by the IANA. 
+
+BGP (EGP) is what connects ASNs together. You can have networks with OSPF or EIGRP as IGPs, and them have links to each other which the links from edge routers would be BGPs. 
+
+IGP routing protocols…
+	1. Distance vector (sometimes called Bellman Ford after its creators)
+	2. Advanced distance vector (Sometimes called balanced hybrid
+	3. Link-State
+
+OSPF = Link State protocol
+RIP = distance vector
+EIGRP = Advanced distance vector protocol
+
+Routing protocol metrics
+RIPv2 = Hop count - The number of routers (hops) between a router and the destination subnet
+OSPF = Cost - The sum of all interface cost settings for all links in a route, with the cost defaulting to be based on interface bandwidth
+EIGRP = Calculation based on bandwidth and delay - Calculated based on the routes slowest link and the cumulative delay associated with each interface in the route.
+
+ Route redistribution = Router learning routes learned by OSPF and advertising them into EIGRP, vice versa as well
+
+Administrative distance = is a number that denotes how believable an entire routing protocol is on a single router. The lower the number, the better and most chosen. 
+
+ADMIN DISTANCE DEFAULTS….
+
+Ospf: 110
+EIGRP: 90
+BGP: 20
+Static: 1
+Connected: 0
+IGRP: 100
+RIP: 120
+
+ospf organizes topologies using LSAs and the link state database (LSDB)
+
+LSAs = Link State Advertisements
+
+LSA is a data structure with some specific information about the network topology. LSDB is simply the collection of all the LSAs known to a router. 
+
+LSAs are flooded at a default of 30 minutes. When an LSA is flooded, it makes sure the neighbor router already has the information. If it doesn't, it sends. If it does, it doesn't take the LSA. 
+
+SPF = Dijkstra Shortest Path First, which is an algorithm to build the routes form the local router to the routing table. 
+
+	1. Becoming neighbors: A relationship between two routers that connect to the same data link, created so that the neighboring routers have a means to exchange their LSDBs. 
+	2. Exchanging databases: The process of sending LSAs to neighbors so that all the routers learn the same LSAs.
+	3. Adding the best Routes: The process of each router independently running SPF on their local copy of the SDB, calculating the best routes and adding those to the IPv4 routing table. 
+show ip ospf neighbor command shows neighbor routes. 
+
+Process of creating OSPF neighbors is through hello commands. You send OSPF Hello messages which contains RID (routers ID) which serves as each routers unique name or identifier for OSPF. Finally, OSPF does several checks of the information in the Hello messages to ensure that the two routers should become neighbors. 
+
+OSPF RIDs are 32 bit numbers, listed as DDNs (dotted decimal numbers)
+
+Routers use multicast to send hello messages
+
+When a neighbor finally becomes a 2 way state, that means the router is available to exchange its LSDB with the neighbor. After LSAs are exchanged, we can now exchange LSDB.
+
+When it has completed, it will be in FULL STATE. 
+
+LSU = Link state update packets. Can send the LSAs between neighbors with LSUs
+
+Maintain neighbor state by sending Hello messages based on the hello interval and listening for hellos before the dead interval expires. 
+
+Flood any changed LSAs to each neighbor
+Reflod unchanged LSAs as their lifetime expires (default 30 minutes)
+
+DR: Designated Router
+BDR: Backup designated Router, waits for DR to fail then takes its place. 
+DROthers: Routers that are neither a designated router or backup DR
+
+DROthers never reach a full state because they do not exchange LSDBs directly with each other. 
+
+Full state is for connection between DR and BDR
+2 Way state is with Drothers
+
+Fully adjacent neighbors are DR with BDR
+
+2 way - neighbor - neighbor relationship
+Full - Adjacent neighbor/fully adjacent neighbor - Adjacency
+
+SPF algorithm calculates best route to take
+Finding lowest cost metric
+
+To save bandwidth and traffic, you can use areas to break down a large LSDB and break it down into smaller LSDBs. 
+ABR = Area Border Routers
+you can connect areas (make sure connection to backbone, default 0 area, is there) with ABRs. 
+
+ABR = Area border Router - An OSPF router with interfaces connected to the backbone area and to at least one other area.
+Backbone router = A router connected to the backbone Area
+Internal router = A router in one area (not the backbone area)
+Area  = A set of routers and links that hares the same detailed LSDB information, but not with routers in other areas for better efficiency
+Backbone area = A special OSPF area to which all other areas must connect (area 0)
+Intra-area route = A route to a subnet inside the same area as the router
+Interarea route = A route to a subnet in an area of which the router is not apart of. 
+
+show ip ospf database command shows a ton of information of the LSDBs contents
+
+LSA Name - LSA Type - Primary Purpose - Contents of LSA
+Router - 1 - Describes a router - RID, interfaces, IP address/mask, current interface status
+Network - 2 - Describe a network that has a DR - DR and BDR Ip addresses, subnet IDs, mask
+Summary - 3 - Describe a subnet in another area - Subnet ID, mask, RID of ABR that advertises the LSA
+
+
