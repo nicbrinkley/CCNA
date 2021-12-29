@@ -1,0 +1,67 @@
+Routing Steps for sending packets:
+
+Step 1: Router R1 notes that the received Ethernet frame passes the FCS check and that the destination Ethernet MAC address is R1's MAC address, so R1 processes the frame
+
+Step 2: R1 de-encapsulates the IP packet from inside the Ethernet frames header and trailer
+
+Step 3: R1 compares the IP packets destination IP address to R1s IP routing table
+
+Step 4: R1 encapsulates the IP packet inside a new data link frame, in this case, inside a high level data link Control (HDLC) header and trailer.
+
+Step 5: R1 transmits the IP packet, inside the new HDLC frame, out of the serial link on the right.
+
+Routers can add routes to their routing tables through three methods:
+	1. Connected Routes: Added because of the configuration of the ip address interface subcommand on the local router
+	2. Static Routes: Added because of the configuration of the ip route global command on the local router
+	3. Routing protocols: Added as a function by configuration on all routers, resulting in a process by which routers dynamically tell each other about the network so that they all learn routes. 
+
+When doing a show ip route, you can see what is connected and a local route. The local routes define a route for the one specific IP address configured on the router interface. 
+
+Routing Protocol Code: The legend at the top of the show ip route output lists all the routing protocol codes. C = connected routes, L = local Routes, S = Static Routes, O = OSPF
+
+Prefix: The word prefix is just another name for the subnet ID
+
+Mask: Each route lists a prefix (subnet ID) and a network mask in prefix format, AKA /24
+
+clear ip arp x will clear an IP address from the MAC table
+
+The static route is considered a network route when the destination listed in the ip route commands defines a subnet, or an entire Class A B C network, In contrast, a default route matches all destination IP addresses while a host route matches a single IP address (One host address) 
+
+Example of a static route: ip route 172.168.3.0 255.255.255.0 S0/0/0
+ip route 172.16.3.0 255.255.255.0 172.16.5.3
+
+Whatever route has the lowest administrative distance is the chosen route. 
+
+A floating static route floats or moves into and out of the IP routing table depending on whether the better (lower) administrative distance route learned by the routing protocol happens to exist currently. Basically, the router ignores the static route during times when the better routing protocol route is known. 
+
+SW1# ip route 172.16.2.0 255.255.255.0 172.16.5.3 130  - this will set the static routes administrative distance to 130. As long as the primary link stays up and OSPF on R1 learns a route for 172.16.2.0/24, with a default administrative distance of 110, R1 ignores the static route. 
+
+Commands to show static IP route…
+
+show ip route static
+show ip route 172.16.1.0
+
+The default route matche all packets, so that if a packet does not match any more specific route in the routing table, the router can atleast forward the packet based on the default route. 
+
+Gateway of last resort refers to the chosen default route, in which this case is the just configured static route with outgoing interface of S0/0/1. 
+
+To do this, SW1# ip route 0.0.0.0 0.0.0.0 s0/0/1
+
+When troubleshooting bad static routes with the route appearing in the IP Routing Table , after the show ip route command, see ….
+	1. Is there a subnetting math error in the subnet ID and mask?
+	2. Is the next hop IP addres correct and referencing an IP address on a neighboring router?
+	3. Does the next hop IP address identify the correct router?
+	4. Is the outgoing interface correct, and referencing correct an interface on the local router?
+
+When troubleshooting static routes that do not appear in the IP routing table…
+	1. For ip route commands that list an outgoing interface, that interface must be in an up/up state. 
+	2. For ip route commands that list a next hop ip address the local router must have a route to reach that next hop address.
+
+USE KEYWORD permanent AFTER STATIC IP ROUTE COMMAND to permanently add it to the IP routing table. (Ignores basic checks)
+
+If multiple routes include the destination IP, the most desired route will be the one with the highest subnet mask. If the ip matches a route with a /32 and a /16 address, it will use /32 first before the /16. 
+
+Default route is only used when the IP matches none of the routes in the table and has to use the default route which is usually all IP ranges. 
+
+You can use show ip route x (address) as the command to identify the route a router will use. 
+
