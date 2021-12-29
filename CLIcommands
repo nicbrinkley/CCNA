@@ -1,0 +1,370 @@
+Basic commands	
+Command 	Description
+exit	Logs off user or moves back one level 
+end	Moves you to priv ESCALATION mode 
+disable	Moves you from priv ESCAL mode to user mode
+setup	Enters the sys configuration dialog 
+no	Inverses the act (shutdown, no shutdown (up). No ip address takes away IP)
+	
+Terminal commands	
+terminal no editing	Turns off the use of keyboard shortcuts
+terminal editing	Re-enables enhanced editing mode 
+terminal length x	Set the number of lines displayed in a show command (x is characters)
+terminal history size	Set the number of commands in the buffer that can be recalled by the router
+	
+Show commands	
+Command 	Description
+show version	Displays info about the current version
+show flash:	shows flash information
+show history	list all commands in the history buffer
+	
+show running-config | include hostname	displays configuration information that includes the word "hostname"
+show running-config | section FastEthernet 0/1	displays running configuration information about the section fa0/1
+show running-config | begin line con 0 	output begins with the first line con 0 
+show running-config | exclude interface	any line with interface will not be shown 
+show running-config | include duplex	any line with the value of duplex will be shown with the running config
+	
+show mac address-table	Displays the current mac address table
+show controllers ethernet-controller	Displays information about the ethernet controller
+show startup-config	Displays current configuration in NVRAM
+show running-config	Displays current configuration in DRAM
+show post	Displays whether the switch passed POST
+show vlan	Displays the current vlan configuration
+show interfaces	Displays the current interface configuration(up/up, up/down, down/down)
+show interfaces vlan 1	Displays setting of virtual interfaces with the default vlan, 1
+	
+Resetting Switch Configuration	
+Command 	Description
+delete flash:vlan.dat	Removes the vlan database from flash memory
+erase startup-config	Erases the file from NVRAM
+reload	restarts the switch
+write erase	Erases the startup config file from NVRAM
+	
+Setting Hostnames	
+Command 	Description
+conf t	moves to global configuration mode
+hostname brinkles	changes hostname to brinkles
+	
+Setting Passwords	
+Command 	Description
+enable password cisco	sets the password to "cisco"
+enable secret class	sets the password to "class" and it is encrypted
+line console 0	Enters line console mode
+line vty 0 15	Enters line vty mode for all 15 virtual ports 
+	
+Setting IP Addresses and Default Gateways	
+Command 	Description
+interface vlan 1	Enters the virtual interface for vlan 1, the default vlan 
+ip address 172.16.10.2 255.255.255.0	Sets the IP address and netmask to allow for remote access to the switch
+exit	returns to global conf t mode 
+ip default-gateway 172.16.10.1	Allows ip info an exit past the local network 
+	
+Setting interface Descriptions and mdix	
+Command 	Description
+interface fa0/1	enters interface configuration mode
+description finance VLAN	Adds the description to the interface
+interface fa0/1	enters interface configuration mode
+mdix auto	enables auto-mdix on the interface
+	
+Setting Operation Speed	
+Command 	Description
+interface fa0/1	enters interface configuration mode
+speed 10 	Specifies running at 10Mbps
+speed 100	Specifies running at 100Mbps
+speed 1000	Specifies running at 1000Mbps
+speed 2500	Specifies running at 2500Mbps
+speed 5000	Specifies running at 5000Mbps
+speed auto	Detects the speed and sets it to the recommended speed
+speed negotiate	Disables auto-negotiation, port runs at 1000 Mpbs
+	
+Configuration Example 	
+Command 	Description
+conf t	moves to global configuration mode
+no ip domain-lookup	Turns off DNS queries so that spelling mistakes do not slow you down
+hostname Switch2960	Sets the hostname
+enable secret cisco	sets the password to cisco
+line console 0	enters line console mode
+logging synchronous	Appends commands to a new line 
+login	User must log in to console before use
+password switch	Sets the console password to "switch"
+exec-timeout 0 0	The console line will not log out because of the connection to the console being idle
+exit	leaves console line mode
+line vty 0 15	Moves to configure all 16 vty ports at the same time
+login	User must log in to the vty port before use
+password class	sets the vty password to "class"
+exit	leaves vty mode
+ip default-gateway 192.168.1.1	Sets the default gateway
+interface vlan 1	Moves to virtual interfafce vlan 1 conf mode
+ip address 192.168.1.2 255.255.255.0	Sets the IP address and netmask for switch
+no shut	Turns the virtual interface on
+interface fa0/1	Moves to interface conf mode for fa0/1
+description Link to Bismark Router	Sets local description
+interface fa0/4	Moves to interface conf mode for fa0/4
+description Link to Workstation A	sets local description
+interface fa0/8	Moves to interface conf mode for fa0/8
+description Link to Workstation B	Sets local description 
+exit	returns to global conf mode
+exit	returns to priv exec mode
+copy running-config startup-config	Saves the configuration NVRAM
+	
+	
+SSH Example 	
+Command 	Description
+hostname sw1	How to set up ssh and logins 
+ip domain-name example.com
+crypto key generate rsa
+
+How many bits in the modulus: (Enter in ) 1024
+ip ssh version 2
+line vty 0 15
+login local
+exit
+
+username wendell password odom
+username chris password youdaman
+exit
+	
+Configuration of IPv4 on a switch (Static) Example 	
+Command 	Description
+conf t	configuration mode
+interface vlan 1	enter into vlan 1 conf mode
+ip address 192.168.1.200 255.255.255.0	assigns ip address to the vlan interface
+no shutdown	turns it on
+exit	leaves vlan interface conf mode
+ip default-gateway 192.168.1.1	assigns the default gateway an ip address
+	
+Configuration of DHCP to learn its IP address 	
+Command 	Description
+conf t	config mode
+interface vlan 1	vlan 1 interface config mode
+ip address dhcp	assigns the ip using dhcp interface mode
+no shutdown	turns the interface on
+^z	leaves
+	
+Configuring speed/duplex/description	
+Command 	Description
+conf t	configuration mode
+interface fa0/1	going into interface 0/1 conf mode
+duplex full	setting duplex to full
+speed 100	setting speed to 100 mbps
+description Printer on 3rd floor, present to 100/full	setting description
+exit	exiting interface 0/1
+interface range fa0/11-20	going into the range of 0/11-20
+description end-users connect here	adding description
+^z	leaving
+show interfaces status 	shows the interface port, name, status, vlan, duplex, speed, and type 
+	
+Chapter 7 EXEC Command Shows	
+Command 	Description
+show running-config	lists the currently used config
+show running-config | interface fa0/1	displays the running-config excerpt of the listed interface
+show mac address-table static 	lists static mac addresses and mac addresses learned or defined with port security
+show interfaces [type number] status	lists one output line per interface, noting the description, operating state, and settings for duplex and speed
+show interfaces [type number]	lists detailed status and statistical information about all interfaces
+show interfaces description	displays one line of info per interface, with a two item status and includes description that is configured
+	
+Creating Vlans	
+Command 	Description
+Vlan 3	Creates Vlan 3
+name engineering	calls it engineering
+exit	leaves vlan, returns to global conf mode
+	
+Assigning Ports to Vlans	
+Command 	Description
+int fa0/1	goes into int fa0/1 configure mode
+switchport mode access	Sets the port to access mode
+switchport access vlan 10	Assigns this port to vlan 10
+To assign multiple ports to vlans….	
+int range fa0/1 - 9	Chooses a range of interfaces
+switchport mode access	Sets ports 1-9 as access ports
+switchport access vlan 10	Assigns ports 1 to 9 to a VLAN 10 
+	
+Configuring Voice and Data with Trust	
+Command 	Description
+Conf t	enters global conf mode
+mls qos	Enables QOS functionality globally
+interface fa0/6	Moves to interface conf mode
+msl qos trust cos	Has the interface enter into a state of trust and classifies traffic by examining the incoming Class of Service
+mls qos trust dscp	Has the interface enter into a state of trust and classifies traffic by examining the incoming Differentiated Services Code Point value
+switchport voice vlan dot1p	Configures the telephone to use the IEEE 802.1p priority tagging to forward all voice traffic with a higher priority through VLAN 0 (The native VLAN). By default, the Cisco IP phone forwards the voice traffic with an IEEE 802.1p priority of 5.
+switchport voice vlan none	Does not instruct the IP telephone about the Voice VLAN. The telephone uses the configuration from the telephone keypad
+switchport voice vlan untagged	Configures the telephone to send untagged voice traffic. This is the default for the telephone. 
+switchport voice vlan 10	Configures voice vlan 10
+switchport voice vlan 10 name vlan_name	optional command. Specifies the VLAN name to be used for voice traffic.
+switchport priority extend trust	Extends the trust state to the device connected to the access port of the IP phone. The switch instructs the phone on how to process data packets from the device connected to the IP phone.
+priority-queue out	Gives voice packets head of line privileges when trying to exit port. Prevents Jitter
+spanning-tree portfast	Enables PortFast on the interface, which removes the interface from the STP
+spanning-tree bpduguard enable	Enables bridge protocol data unit (BPDU) Guard on the interface
+exit	exits interface mode
+	
+	
+Configuring Voice VLAN	
+Command 	Description
+vlan 10	Creates Vlan 10 where the pcs will be
+vlan 11	Creates vlan 11 where the IP phones will be
+int range fa0/1 -4	Goes into int conf mode for the range
+switchport mode access	Sets the switchport mode to access
+switchport access vlan 10	Sets vlan 10 to be the access port
+switchport voice vlan 11	Sets vlan 11 to be the voice vlan 
+exit	leaves int conf mode
+	
+Configuring Voice VLAN without Trust	
+Command 	Description
+conf t	config mode
+mls qos	enables qos globally
+interface fa0/8	goes into interface fa0/8
+mls qos trust cos	Has the interface enter into a state of trust and classifies traffic by examining the incoming class of service value
+mls qos trust dscp	Has the interface enter into a state of trust and classifies traffic by examining the incoming differentiated services code point value
+switchport voice vlan 10	configures voice vlan 10
+switchport access vlan 20	configures data vlan 20
+priority-queue out	Gives voice packets head of line privileges when trying to exit the port.
+spanning-tree portfast	Enables portfast on the interface, which removes the interface from the spanning tree protocol 
+spanning-tree bpduguard enable	Enables BPDU Guard on the interface
+exit	Exits interface conf mode
+	
+Verifying VLAN Information	
+Command 	Description
+show vlan	Displays vlan information
+show vlan brief	displays vlan information in brief
+show vlan id 2	displays information about vlan 2 only
+show vlan name marketing	displays information about vlan named marketing only
+show interfaces vlan x	displays interface characteristics for the specified vlan
+show interfaces switchport	displays vlan info for all interfaces
+show interfaces fastethernet 0/6 switchport	displays vlan information (including voice vlan information) for the specified interface
+	
+Erasing VLAN configs	
+Command 	Description
+delete flash:vlan.dat	Removes the entire vlan database from flash . Make sure there is no space between the colon and "vlan.dat" because you could potentially delete the whole flash. 
+interface fa0/5	goes into int fa0/5
+no switchport access vlan 5	Removes port from vlan 5 and reassigns it to vlan 1 - the default vlan
+exit	Moves to global config
+no vlan 5	removes vlan 5 from the vlan database
+	
+Configuration Example: VLANs	
+Command 	Description
+enable	priv mode
+conf t	conf mode
+hostname Switch2960	names Switch2960
+vlan 10	creates vlan 10
+name Admin	names vlan 10 Admin
+exit	exits to global conf mode
+vlan 20	Creates vlan 20
+name Accounting	names vlan 20 Accounting
+vlan 30	creates vlan 30
+name Engineering	names vlan 30 engineering
+exit	exits to global conf mode
+interface range fa0/1 - 8	goes into int range fa0/1 - 8
+switchport mode access	sets ports to access ports
+switchport access vlan 10	Assigns ports to vlan 10
+interface range fa0/9 -15	goes into int range
+switchport mode access	sets ports to access ports
+switchport access vlan 20	assigns ports to vlan 20
+interface range fa0/16 - 24	goes into int range
+switchport mode access	sets ports as access ports
+switchport access vlan 30	assigns ports to vlan 30
+exit 	exits 
+exit	exits to priv
+copy running-config startup-config	Saves configuration in NVRam
+	
+Dynamic Trunking Protocol : DTP	
+Command 	Description
+int fa0/1	Moves to int conf 
+switchport mode dynamic desirable	Makes the interface actively attempt to convert the link to a trunk link
+switchport mode dynamic auto	Makes the interface able to convert into a trunk link
+switchport nonegotiate	Prevents the interface from generating DTP frames
+switchport mode trunk	Puts the interface into permanent trunking mode and negotiates to convert the link into a trunk link 
+	
+Setting the encapsulation type	
+Command 	Description
+int fa0/1	Moves to int conf mode
+switchport mode trunk	Puts the interface into permanent trunking mode and negotiates to convert the link into a trunk link 
+switchport trunk encapsulation isl	specifies isl encapsulation on trunk link
+switchport trunk encapsulation dot1q	specifies 802.1q tagging on the trunk link
+switchport trunk encapsulation negotiate 	Specifies that the interface negotiate with the neighboring interface to become either an isl or dot1q trunk, depending on the capabilities or configuration of the neighboring interface
+	
+VLAN Trunking Protocol: VTP	
+Command 	Description
+vtp mode client 	Changes the switch to VTP client mode
+vtp mode server	Changes the switch to VTP server mode
+vtp mode transparent	Changes the switch to VTP transparent mode
+no vtp mode 	Returns the switch to the default VTP server mode
+vtp domain "domain-name"	configures the VTP domain name. The name can be from 1 to 32 characters long
+vtp password "password"	Configures a VTP password. 
+vtp version "number"	Sets the VTP version to version 1, version 2, or version 3
+vtp primary-server	Changes the operation state of a switch from a secondary server to a primary server and advertises the configuration to the domain. If the switch password is configured as hidden, you are prompted to reenter the password. 
+vtp primary-server vlan	OPTIONAL. Selects the VLAN database as the takeover feature. This is the default state. 
+vtp primary-server mst	OPTIONAL. Selects the multiple Spanning tree database as the takeover feature. 
+vtp primary-server force	OPTIONAL. Entering force overwrites the configuration of any conflicting servers. If you do not enter force, you are prompted for confirmation before the takeover.
+vtp primary	Configures the device as a VTP primary server on the 9200 series switch. The same optional parameters of vlan, mst, and force are also valid on this platform.
+vtp pruning	Enables vtp pruning.
+	
+Verifying VTP	
+Command 	Description
+show vtp status	Displays general information about vtp configuration
+show vtp counters	shows the vtp counters for the switch
+	
+Inter VLAN communication using Router on a Stick	
+Command 	Description
+int fa0/1	Moves to int conf mode
+duplex full	sets the interface to full duplex
+no shut	enables the interface
+int fa0/0.1	creates subinterface 0/0.1 and moves to subinterface conf mode
+description Management VLAN 1	sets the locally significant description 
+encapsulation dot1q 1 native	Assigns VLAN 1 to this subinterface. VLAN 1 will be the native VLAN. This subinterface uses the 802.1q tagging protocol.
+ip address 192.168.1.1 255.255.255.0	Assigns IP address
+int fa0/0.10	Creates subinterface 0/0.10 and moves subinterface conf mode
+description Accounting VLAN 10	sets description
+encapsulation dot1q 10	Assigns VLAN 10 to this subinterface using 802.1q tagging protocol
+ip address 192.168.10.1 255.255.255.0	Assigns ip address
+exit	exits
+exit	exits
+	
+Inter VLAN communication on a multi-layer switch - SVI	
+Command 	Description
+int gi0/1	interface conf mode
+no switch port	Creates a layer 3 port on the switch
+	
+Configuring Inter-VLAN Communication on an L3 Switch 	
+Command 	Description
+interface vlan 1	creates a virtual interface for VLAN 1 and enters int conf mode
+ip address 172.16.1.1 255.255.255.0	Assigns IP address and netmask
+no shut	enables the interface
+interface vlan 10 	creates a virtual interface for vlan 10 and enters int conf mode
+ip address 172.16.10.1 255.255.255.0	Assigns IP address and netmask
+no shut	enables the interface
+int vlan 20	creates a virtual interface for vlan 20 and enters int conf mode
+ip address 172.16.10.1 255.255.255.0	Assigns IP address and netmask
+no shut	enables the interface
+exit	leaves mode
+ip routing	Enables routing on a switch 
+	
+Configuration Example: Inter-VLAN Communication	
+ISP Router	
+Command 	Description
+enable	
+conf t	
+hostname ISP	
+int loopback 0	Moves to int loopback conf mode 
+description simulated address representing remote website	
+ip address 198.133.219.1 255.255.255.0	        
+int serial 0/0/0	
+description WAN link to the corporate Router	
+ip address 192.31.7.5 255.255.255.252	
+clock rate 56000	
+no shut	
+exit	
+router eigrp 10	
+network 198.133.219.0	
+network 192.31.7.0	
+no auto-summary	
+exit	
+copy running-config startup-config	
+	
+	
+	
+	
+	
+	
+	
+	
+
