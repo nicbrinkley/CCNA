@@ -1,0 +1,18 @@
+Ping commands is the number one troubleshooting command you can use to test connectivity.
+
+Traceroute command helps network engineers trace problems by seeing the routes the packet takes and seeing where the ping is dropped. You can see then that the interface it was dropped from has a problem whether a trunk isn't set up, no link, etc.
+
+Traceroute sends several TTL packets checking to see whether the TTl exceeded messages flow from the same router, based on the source IP address of the TTL exceeded messages. 
+
+Standard + extended pings/traceroute 
+
+ping 10.10.10.1 (standard)
+ping (extended, put in variables atfter command 
+
+traceroute 10.10.10.1
+traceroute
+
+telnet 10.10.10.1
+ssh -l Wendell 10.10.10.1 (Wendell is login username)
+
+
