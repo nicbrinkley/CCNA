@@ -1,0 +1,52 @@
+A LAN includes all devices in the same broadcast domain
+
+A Broadcast domain includes the set of all LAN connected devices. Any broadcast frames will go to all devices in the domain, receiving the broadcast address.
+
+Using only default settings, a switch considers all interfaces to be in the same broadcast domain. 
+
+The most common reasons for choosing a smaller broadcast domain are:
+
+	1. To reduce CPU overhead on each device, improving host performance, reducing # of devices
+	2. reduce security risks
+	3. improve security for hosts
+	4. Create more flexible designs that group users by departments
+	5. To solve problems more quickly 
+	6. To reduce the workload for STP 
+
+Vlan Tagging: 
+shown in lab
+
+Trunk ports are Tagged ports. (Can send tagged vlan traffic )
+Access ports are untagged Ports. (Can send untagged traffic because the hosts are in the same vlan)
+802.1Q also defines one special VLAN ID on each trunk as the native VLAN (Defaulting to VLAN 1) 
+
+The native VLAN concept gives switches the capability of at least passing traffic on one VLAN (the native VLAN), which can allow some basic functions like reachability to telnet into a switch. 
+
+Devices in the same vlan need to have the same subnet, devices in different vlans need to have different subnets. 
+
+VTP = Vlan Trunking Protocol
+^^ This is a Cisco proprietary tool on Cisco switches that advertises each VLAN configured in one switch so that all the other switches in the campus learn about that VLAN. 
+
+Voice Vlans configuration is shown in CLI commands 
+
+IN SUMMARY For IP TELEPHONY PORTS…
+Configure these ports like a normal access port to begin
+Add one more command to define the voice VLAN 
+Look for the mention of the voice VLAN ID, but no other new facts in the output of show interfeaces (#) switchport command
+Look for both the voice and data VLAN IDs in the output of the show interfaces type number trunk command
+Do not expect to see the port listed in the list of operational trunks 
+
+Troubleshooting VLANS and VLAN Trunks:
+
+	1. Confirm that all VLANs are both defined and active. 
+	2. Check the allowed VLAN lists on both ends of each trunk to ensure that all VLANs intended to be used are included
+	3. Check for incorrect trunk configuration settings that result on one switch operating as a trunk, with the neighboring switch not operating as a trunk
+	4. Check the native VLAN settings on both ends of the trunk to ensure the settings match 
+
+VLAN lists in the show interfaces trunk command
+First list position, showing VLANs allowed, shows the allowed VLANs
+Second list position, VLANs allowed and active, shows the allowed/active VLANs
+Third position, VLANs in STP forwarding state, shows forwarding state vlans
+
+
+
