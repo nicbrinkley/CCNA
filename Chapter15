@@ -1,0 +1,39 @@
+CSU/DSU = Channel Service Unit/Data Service Unit
+The link is terminated at the CSU/DSU.
+The CSU/DSU can either sit outside of the router as a separate device or be integrated into the routers serial interface hardware. (Within the interface of a router)
+
+With external CSU/DSU, you run a ethernet. With internal, you run a RJ-48 port to which the serial cable should connect. 
+
+NIMS = Network Interface Modules.
+
+SOHO = Small office/home office routers
+
+Layer 2 switches support show mac address-table commands, router does not
+layer 3 routers support show ip route commands, switches do now
+layer 2 switches use the show interfaces status command, while routers use show ip int brief 
+
+show int AND show ip int bri are the most common commands to display interfaces.
+
+show int gi0/0 shows a ton of detail information about the specific interface
+show ip int bri shows some detail on all of the interfaces
+
+Line status = first status code = Refers to the layer 1 status, for example, if the cable is installed, is it the right/wrong cable, is the device on the other end powered on?
+
+Protocol status = second status code = Refers generally to the layer 2 status. It is always down if the line status is down. If the line status is up, a protocol status of down is usually caused by a mismatched datalink layer configuration
+
+Line status	Protocol Status	Typical Reasons
+admin down	down	the interface has a shutdown command configured on it
+down	down	The interface is not shutdown, but the physical layer has a problem. For example, no cable has been attached to the int or with ethernet, the switch int on the other end of the cable is shut down
+up 	down	Almost always refers to data link layer problems, most often conf problems. For example, serial links have this combination when one router was configured to use PPP and others defaults to use HDLC
+up	up	Layer 1 and layer 2 of this interface are functioning. 
+
+To configure a router, you need to enable the interface and give it a IPv4 address. 
+	1. Most cisco router interfaces default to disable, you need to no shutdown the interface
+	2. Cisco routers do not route IP packets in or out of an interface until an IP address and mask have been configured. by default, no interfaces have an IP address and mask. 
+	3. Cisco routers attempt to route IP packets for any interfaces that are in an up/up state and that have an IP address/mask assigned. 
+
+Aux port typically serves as a means to make a phone call to connect to connect into the router to issue commands from the CLI. Aux port works like a console port, except that the aux port is typically connected through a cable to an external analog modem, which in turn connects to a phone line. The engineer then uses a PC, terminal emulator, and modem to call the remote router. 
+
+Use the line aux 0 command to reach aux line conf mode. From there, all the commands for the console line, covered mostly in chap 6, can be used. For example, the login and password x subcommands on the aux line could be used to set up a simple password checking when a user dials in. 
+
+
