@@ -1,0 +1,362 @@
+Commands:	Description
+	
+Data VLAN	
+enable	enable mode
+conf t	Conf mode
+vlan 10	Creates VLAN
+name data	Assigns name
+vlan 20	Creates VLAN
+name server	Assigns name
+copy running-config startup-config	Saves to start up config
+	
+show running-config	
+show vlan id 10	
+show vlan brief	
+	
+Access Ports	
+enable	enable mode
+conf t	Conf mode
+int range fa0/1-16	Goes into interface mode for the range of ports
+switchport mode access	Creates range as access ports
+switchport access vlan 9	Assigns the range to vlan 9
+int range fa0/17-22	Goes into interface mode for the range of ports
+switchport mode access	Creates range as access ports
+switchport access vlan 10	Assigns the range to vlan 10
+ copy run start	Saves to start up config
+	
+show running-config	
+show vlan brief	
+	
+Voice VLAN	
+enable	enable mode
+conf t	Conf mode
+vlan 9	creates vlan
+name data	Names it
+vlan 10	creates vlan
+name voice	Names it
+exit	goes back to conf mode
+int range fa0/1-24	goes into range of ports
+switchport mode access	makes ports access ports
+switchport access vlan 9	assigns to vlan 9
+switchport voice vlan 10	enables voice vlan on access ports for IP phones and assigns vlan 10 
+end	
+copy run start	
+	
+show running-config	
+show vlan id 10	
+show vlan brief	
+	
+Static Trunking 	
+Switch 1:	
+enable	enable mode
+conf t	Conf mode
+vlan 10 	creates vlan
+exit	leaves
+int fa1/1	int mode
+switchport mode access	creates the port as an access port
+switchport access vlan 10	assigns port to vlan 10
+exit	exits
+vlan 11	Creates vlan 
+exit	exits
+int fa0/1	int mode
+switchport mode access 	makes it access port
+switchport mode access vlan 11	assigns it to vlan 11
+exit	exits
+int fa2/1	int mode
+switchport mode trunk	creates trunk on port
+switchport nonegotiate	Turns off DTP
+switchport trunk allowed vlan 10,11	Only allows vlan 10 and vlan 11 across the switch trunk
+end	
+copy run start	
+	
+Switch 2:	
+enable	enable mode
+conf t	Conf mode
+vlan 10	creates vlan
+int fa1/1	
+switchport mode access	creates port as an access port
+switchport access vlan 10	assigns port to vlan 10
+exit	
+vlan 11	creates vlan
+exit	
+int fa0/1	int mode
+switchport mode access	creates port as an access port
+switchport access vlan 11	assigns port to vlan 11
+exit	exits
+int fa2/1	Int mode
+switchport mode trunk	Creates trunk port
+switchport nonegotiate	Turns off DTP
+switchport trunk allowed vlan 10,11	Only allows vlan 10 and vlan 11 across the switch trunk
+end	
+copy run start	
+	
+show int trunk	
+ping commands	
+	
+Nondefault Native VLAN	
+enable	enable mode
+conf t	Conf mode
+int fa3/1	int mode
+switchport mode trunk	creates trunk port
+switchport nonegotiate	disables DTP
+switchport trunk native vlan 999	changes the default native vlan 1 to nondefault native vlan 999
+switchport trunk allowed vlan 10-11,100	allow only vlan 10, vlan 11, and vlan 100 across the trunk interface
+end	end
+copy run start	saves to start up
+	
+switch 2:	
+en	enables
+conf t	conf mode
+int fa3/1	int mode
+switchport mode trunk	creates trunk port
+switchport nonegotiate	disables DTP
+switchport trunk native vlan 999	changes the default native vlan 1 to nondefault native vlan 999
+switchport trunk allowed vlan 10-11, 100	allow only vlan 10, vlan 11, and vlan 100 across the trunk interface
+end	end
+copy run start	saves to start up
+	
+show int trunk	
+	
+Dynamic Trunking Protocol (DTP):	
+enable	enable mode
+conf t	Conf mode
+int fa2/1	int mode
+switchport mode dynamic desirable	Sets to trunk interface and sends DTP negotiation frames to any connected upstream Neighbor
+switchport trunk native 100	Change native vlan to 100 and allows all vlans across the trunk
+end	ends
+copy run start	saves to start up config
+On switch two, do same thing up above except set to dynamic auto^^^	Dynamic auto listens for DTP frames from any connected switch. 
+	
+show int trunk	
+	
+Layer 2 EtherChannel (LACP):	
+enable	enable mode
+conf t	Conf mode
+int fa2/1	int mode
+switchport mode trunk	Creates trunk
+switchport nonegotiate	Disables DTP
+switchport trunk allowed vlan 10-11	allows vlan 10-11 over the trunk
+channel-group 1 mode active	adds fa2/1 to etherchannel bundle with LACP active mode and assigns it to channel group 1
+no shut	turns on int
+exit	leaves
+int fa3/1	int mode
+switchport mode trunk	creates trunk
+switchport nonegotiate	disables DTP
+switchport trunk allowed vlan 10-11	allows vlan 10-11 over the trunk
+channel-group 1 mode active	adds fa3/1 to etherchannel bundle with LACP active mode and assigns it to channel group 1
+no shut	turns on port
+exit	leaves
+int port-channel 1	enables int port channel 1 (p01) for channel group 1
+switchport mode trunk	Creates trunk
+switchport nonegotiate	disables dtp
+no shut	turn on interface
+end	leaves
+copy run start	saves to start up config
+Switch 2, do the same thing^	
+	
+show running-config	
+show etherchannel summary	
+ping between hosts and servers	
+LACP:	PAgP:
+open standard	Cisco proprietary
+bundle = 8 ports + 8 standby	bundle = 8 ports
+passive mode (default)	auto mode (default)
+active mode	desirable mode
+any port active = etherchannel	any port desirable = etherchannel
+	
+Layer 3 Port Channel	
+enable	
+conf t	
+int gi0/1	
+no switchport	
+channel-group 2 mode active	
+no shut	
+exit	
+	
+int gi0/2	
+no switchport	
+channel-group 2 mode active	adds gi0/1 to etherchannel with LACP active mode and assigns to channel group 2
+no shut	
+exit	
+	
+int port-channel 2	
+ip address 192.168.3.1 255.255.255.0	configures port channel 2 with an ip address and assigns to channel-group 2 
+no shut	
+end	
+copy running-config start-config	
+	
+SWITCH 2:	
+enable	
+conf t	
+int gi0/1	
+no switchport	
+channel-group 2 mode active	
+no shut	
+exit	
+	
+int gi0/1	
+no switchport	
+channel-group 2 mode active	
+no shut	
+exit	
+	
+int port-channel 2	
+ip address 192.168.3.2 255.255.255.0	
+no shut	
+end	
+copy running-config startup-config	
+	
+show running-config	
+show etherchannel port-channel	
+show etherchannel summary	
+	
+Rapid PVST+	
+en	
+conf t	
+int fa0/1	
+switchport mode trunk	makes it a trunk 
+switchport trunk allowed vlan 10-11	allows only vlans 10-11
+exit	
+int fa1/1	
+switchport mode trunk	
+switchport trunk allowed vlan 10-11	
+exit	
+	
+spanning-tree mode rapid-pvst	
+end	
+copy running-config startup-config	
+DO THAT ON ALL CONNECTED SWITCHES/INTERFACES	
+	
+show running-config	
+show spanning-tree summary	
+show spanning-tree vlan 10	
+	
+Port Fast	
+en	
+conf t	
+vlan 10	creates vlan
+name data	names it
+exit	
+int fa0/1	
+switchport mode access	makes it an access port
+switchport access vlan 10	access only vlan 10 
+spanning-tree portfast	enables port fast on port fa0/1 (Still in int fa0/1)
+exit	
+	
+show running-config	
+show spanning-tree interface fa0/1 portfast	
+show spanning-tree interface fa0/1 portfast	
+	
+Root Bridge Selection	
+en	
+show spanning-tree vlan 10	Verify the root bridge for vlan 10 and vlan 11 is sw2
+show spanning-tree vlan 11	
+On switch 3…	
+en	
+conf t	
+spanning-tree vlan 10 priority 28672	
+spanning-tree vlan 11 priority 28672	
+end	
+copy running-config startup-config	
+	
+show spanning-tree summary	
+show spanning-tree vlan 10	
+	
+Power over ethernet	
+en	
+conf t	
+int range fa0/1-24	
+switchport mode access	
+switchport access vlan 9	
+switchport voice vlan 10	assigns all fa switch ports to voice vlan 10 for IP phones and enables POE 
+power inline auto	
+end	
+copy run start	
+	
+show power inline	
+	
+CDP - Cisco discovery protocol	
+en	
+conf t	
+cdp run	
+end	
+copy run start	
+switch 2:	
+en	
+conf t	
+cdp run	
+end	
+copy run start	
+switch 3:	
+en	
+conf t	enables cdp globally
+cdp run	
+end	
+copy run start	
+switch 4:	
+en	
+conf t	
+cdp run	enables cdp globally except disables cdp locally on switch int fa0/1
+int fa0/1	
+no cdp enable	
+end	
+copy run start	
+	
+show cdp neighbors	
+	
+lldp - link layer discovery protocol	
+en	
+conf t	
+lldp run	globally activates it
+int fa0/1	
+no lldp receive	disables lldp on a specific interface port
+no lldp transmit	
+end	
+copy run start	
+	
+show lldp 	
+show lldp neighbors	
+	
+Layer 3 Switching	
+en	
+conf t	
+int fa0/1	
+switchport mode access	
+switchport access vlan 10	
+int fa0/2	
+switchport mode access	
+switchport access vlan 11	
+int fa0/3	
+switchport mode access	
+switchport access vlan 12	
+exit	
+ip routing	Enables ip routing
+int vlan 10 	configuring svi per host vlan
+ip address 172.16.10.254 255.255.255.0	
+no shut	
+int vlan 11	
+ip address 172.16.11.254 255.255.255.0	
+no shut	
+int vlan 12	
+ip address 172.16.12.254 255.255.255.0	
+no shut	
+exit	
+configure your default gateway (SVI) on connected hosts…	
+give host-1 an ip of 172.16.10.254	
+give host-2 an ip of 172.16.11.254	
+give host-3 an ip of 172.16.12.254	
+	
+int fa0/4	configures interface to the Router
+no switchport	
+ip address 172.16.1.1 255.255.255.0	
+no shut	
+exit	
+	
+ip route 0.0.0.0 0.0.0.0 172.16.1.2	Configures default route to router
+end	
+copy run start	
+	
+pings for verify	
+	
+
+	
