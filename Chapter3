@@ -1,0 +1,22 @@
+Chap 3: 
+Leased Circuit: The words line and circuit are often used as synonyms in telco terminology. Circuit makes reference to the electrical circuit between the two endpoints.
+Serial Link/Serial Line: The words link and line are also often used as synonyms. Serial in this case refers to the fact that the bits flow serially and that routers use serial interfaces. 
+Point to Point: This terms refers to the fact that the topology stretches between two points, and two points only. (Some older leased lines allowed more than two devices.)
+T1: This specific type of leased line transmits data at 1.544 megabits per second. 
+WAN Link: Both of these terms are very general, with no references to specific technologies. 
+Private Line: This term refers to the fact that the data sent over the line cannot be copied by other telco customers, so the data is private. 
+
+two most common data-link protocols for leased lines between two routers are called HDLC (High level data link control) and PPP (Point to point protocol)
+
+HDLC Header Fields to Ethernet: (HDLC Field, Ethernet Equivalent, Description)
+Flag, Preamble SFD, Lists a recognizable bit pattern so that the receiving nodes realize that a new frame is arriving. 
+Address, Destination Address, Identifies the destination device
+Control, N/A, Mostly used for purposes no longer in use today for links between routers
+Type, Type, Identifies the type of Layer 3 packet encapsulated inside the frame
+FCS, FCS, Identifies a field used by the error detection process. 
+
+Proprietary Cisco HDLC (Adds a Type Field)
+[Flag][Address][Control][Type][Data][FCS]
+
+PoP: Point of presence
+EoMPLS WAN Link can use ethernet connections both layer 1 and layer 2, meaning they can use the same packet frame. (You would not have to decapsulate/encapsulate the header and trailer because they can read ethernet headers. 
