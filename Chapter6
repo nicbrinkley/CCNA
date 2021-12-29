@@ -1,0 +1,91 @@
+Usually there are two passwords on a cli, one for console one for telnet. For console, you can enable password/secret in the line console 0 config. For the telnet password, you can enable password in the line vty 0 15 config
+
+There is also an enable password to protect priv mode 
+
+enable password in config
+enable password in vty
+enable password in line con 0
+
+typing "login" after the password tells the IOS to enable the use of a simple shared password 
+
+Configuring switches to use local username login authentication
+	1. use the "username 'name' secret 'password'" global config command to add one or more usernames/password pairs on the local switch.
+	2. Configure the console to use locally configured pairs.
+	A) Use the line con 0 command to enter console config mode
+	B) Use the login local subcommand to enable console to prompt both username and pass
+	C) (optional) Use the no password subcommand to remove any existing simple shared passwords 
+
+	3. Configure telnet to use locally configured pairs
+	A) Use the line vty 0 15 command to enter vty config mode for all 16 vty lines
+	B) Use the "login local" command to enable the switch to prompt for both username and password for all inbound telnet users.
+	C) (optional) Use the no password subcommand to remove any existing simple shared passwords 
+
+AAA Server = Authentication, authorization, and accounting
+
+HOW TO SET UP SSH:
+
+hostname sw1
+ip domain-name example.com
+crypto key generate rsa
+
+How many bits in the modulus: (Enter in ) 1024
+ip ssh version 2
+line vty 0 15
+login local
+exit
+
+username wendell password odom
+username chris password youdaman
+exit
+
+To control what protocols a switch supports on its vty lines, use the transport input commands in vty mode
+
+transport input all or transport input telnet ssh : Supports both telnet and ssh
+transport input none : support neither
+transport input telnet : support only telnet
+transport input ssh : Support only SSH
+
+To see information about ssh on a network, you can type the command "show ssh" to see ssh configuration
+
+In order to have telnet or ssh, the switch needs an ip address. 
+In a cisco switch by default, all ports are assigned to vlan 1.
+
+To send IP packets to hosts in the same subnet, send the packets directly 
+To send ip packets to hosts in a different subnet, send them to the local router (Default gateway)
+
+To see configuration on IPv4 on switch, look at CLI commands
+To verify ipv4 on a Swithc, look at the "show running-config" command. You can also use the "show interfaces vlan" command which shows information about the specific vlan interface. Lastly, you can use the "show dhcp lease' command to see the temp leased ip address
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
