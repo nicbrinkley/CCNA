@@ -1,0 +1,48 @@
+Three steps in OSPF operation
+
+	1. Create neighbor relationships (command: show ip ospf neighbor)
+	2. Build and flood LSAs between neighbors so everyone has a copy of the LSDB (show ip ospf database)
+	3. SFP algorithm to build routes (show ip route)
+
+You can change RID (Router ID) by typing: router-id 1.1.1.1
+
+To create a loopback address on a router, type: int loopback0 
+Then give it an ip address
+
+To put OSPF on mutliple sub interfaces, do…
+
+router ospf 1
+no network 10.0.0.0 0.255.255.255 area 0
+
+then go into each int g0/0.1 
+ip ospf 1 area 0 
+
+Passive interfaces: you can set an interface as passive, it will still advertise about the subnet but will not create or form a neighbor relationship over an interface
+passive-interface int gi0/0.1 for example
+
+Default Routes: Default routes usually is pointed to the internet. All routers need to learn a default route, used for all traffic going to the internet, so that all packets destined to locations in the internet go to the one router connected to the internet. 
+default-information originate is the command to set a default route. (Sets gateway of last resort to the ip connected to the internet(ISP router)
+(Gateway of last resort would be like 0.0.0.0/0 via [IP of ISP router]
+
+For metrics, you can manually change the cost of an interface by typing: ip ospf cost 5 
+
+setting a cost on an interface references bandwidth
+You can type: bandwidth speed in the interface subcommand to change bandwidth speed of interface (DOES NOT EFFECT TRANSMISSION SPEED)
+
+Interface-Interface default bandwidth-Formula-OSPF Cost
+Serial-1544Kpbs-100,000/1544-64
+Ethernet-10,000Kpbs-100,000/10,000-10
+Fast ethernet-100,000Kpbs-100,000/100,000-1
+Gig - keep going down by 0-cost all at 1
+10gig
+100gig
+
+Command to change reference bandwidth: auto-cost reference-bandwidth [speed] OSPF subinterface mode. 
+auto-cost reference-bandwidth 10000 = 10gigs
+
+You can configure number of paths in a routing table in the ospf subinterface by typing maximum-paths [number] . This helps load balancing
+
+OSPF has two main types, PPP and broadcast
+
+
+
