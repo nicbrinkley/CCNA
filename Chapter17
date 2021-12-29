@@ -1,0 +1,89 @@
+Essentially, you want routers or layer 3 switches to have an ip address in each subnet and have a connected route to each subnet. If this is done, the IP addresses on those routers and layer 3 switches can act as default gateways in those subnets to traffic data frrom vlan to vlan. 
+
+LAN ROUTING OPTIONS IN 4 WAYS
+	1. Use a router, with one router LAN interface and cable connected to the switch for each and every VLAN (typically not used)
+	2. Use a router, with a VLAN trunk connecting to a LAN switch (known as a router on a stick, or ROAS)
+	3. Use a layer 3 switch with switched virtual interfaces (SVI)
+	4. Use a layer 3 switch with routed interfaces (Which may or may not be layer 3 etherchannels)
+
+Router on a stick uses VLAN trunking configuration to give the router a logical router interface connected to each VLAN. 
+
+Cisco calls virtual interfaces "subinterfaces". Each subinterface will get an ip to connect to the vlans
+
+How to configure 802.1q trunking on a router:
+	1. use the interface number.subint command in global conf mode to create a unique subinterface for each VLAN that needs to be routed. 
+	2. Use the encapsulation dot1q vlan_id command in subinterface configuration mode to enable 802.1q and associate one specific VLAN with the subinterface. 
+	3. Use the ip address address mask command in subinterface conf mode to configure IP settings (address and mask)
+
+To make the native vlan on a subinterface, do…
+int fa0/0.10
+encapsulation dot1q 10 native
+ip address 10.0.0.1 255.255.255.255
+
+To make the native vlan on an interface, do…
+int fa0/1
+ip address 10.0.0.1 255.255.255.0
+
+To view the ROAS configuration, use the… 
+show ip route / show vlans commands
+
+if the physical interface is down, the sub interface is down as well… FOR EXAMPLE if fa0/0 is down, then fa0/0.10 and fa0/0.20 are down too
+
+router on a stick is mostly used for branches, layer 3 switches are mostly used for larger LAN sites. 
+Layer 2 switches forward frames within vlans, layer 3 switches forward packets from vlan to different vlans
+
+SVI = Switched virtual interfaces
+
+Troubleshooting SVIs, you have to make sure the switch has been enabled to support IP routing. Second, the vlan associated with each vlan interfade must be known and active on the local switch. 
+
+To enable routing , you need to…
+	1. Use the SW1#sdm prefer lanbase-routing command in global conf mode to change the switch forwarding ASIC settings to make space for IPv4 routes. 
+	2. Use the reload command in enable mode to reload(reboot) the switch to pick up the new sdm prefer command settings. 
+	3. Once reloaded, use the ip routing command in global conf mode to enable the ipv4 routing function in IOS and to enable key commands like SHOW IP ROUTE
+To troubleshoot, you can see if sdm prefer command has not been done by doing show ip route or ip routing and neither command working. 
+
+For a VLAN interface to be in an up state…
+	1. The VLAN must be defined on the local switch
+	2. The switch must have at least one up/up interface using the VLAN, either/both.
+	A) An up/up access interface assigned to that VLAN
+	B) A trunk interface for which the VLAN is in the allowed list, is STP forwarding, and is not VTP pruned.
+	3. The vlan is not shutdown
+	4. the vlan interface is enabled (not shutdown) 
+
+For SVIs, MAKE SURE ALL LINKS ARE ACCESS LINKS AND NOT TRUNKS.
+
+Vlan Routing with Layer 3 switch Routed Ports
+
+For vlan routing with routed ports, instead of a port acting as a layer 2 activity (SVIs route traffic on the port with layer 2 logic, stripping frames, reading MAC addresses, etc) Routed ports can make a physical port act like a router interface instead of a switch interface. 
+
+On a routed port, the switch does not perform layer 2 switching logic on the frame, instead frames arriving in a routed port trigger the layer 3 routing logic. 
+	1. Stripping off the inc frames ethernet data link header/trailer
+	2. Make a layer 3 forwarding decision by comparing the destination IP address to the IP routing table
+	3. Adding a new ethernet data link header/trailer to the packet
+	4. Forwarding the packet, encapsulated in a new frame
+
+On the figure example, the access links to the hosts with assigned vlans are the same (Still two access ports sitting in two separate vlans) however, the interface that is linked to the B1 router is not a Vlan, but can be a routed interface. 
+
+To enable the interface as a routed interface instead of a switched interface, just use the command SW1# no switchport
+Next, after making it a routed port, give it an ip address SW1#ip address 10.1.30.1 255.255.255.0
+
+When to use routed ports? For any topologies with a point to point link between two devices that do routing, a routed interface works well. If there are more (in most cases there are) choose SVIs. 
+
+Usually, in a normal network topology of core/distribution/access design, the core and distribution switches will use routed ports while the other side of distribution switches connecting to multiple switches, we can use SVIs. 
+
+You can use layer 3 Etherchannel in environments that have multiple parallel links between two switches. If you don't, each layer 3 switch will now learn two ip routes with the same neighboring switches which is not best practice, especially when you can use a layer 3 etherchannel to group those links. 
+Etherchannel also provides load balancing which is better.
+
+Configuring the physical interface
+Add the channel-group (number) mode on command to add it to the channel
+Add the no switchport command to make each physical port a routed port. 
+
+configure the PortChannel interface:
+Use the interface port-channel (number) command to move to port channel conf mode
+Add the no switchport command to make sure that the port channel interface acts as a routed port
+Use the ip address (address mask) command to configure the address and mask 
+
+
+
+
+
