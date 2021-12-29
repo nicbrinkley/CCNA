@@ -1,0 +1,42 @@
+Chap 5:
+
+Lan switch forwards ethernet frames
+
+Switches perform 3 actions: 
+1. Deciding when to forward a frame or when to filter (not forward) a frame, based on the destination MAC addresses
+2. Preparing to forward frames by learning MAC addresses by examining th source MAC address of each frame received by the switch. 
+3. Preparing to forward only one copy of the frame to the destination by creating a (layer 2) loop free environment with other switches by using STP
+The first action is the primary job, while steps two and three are overhead actions.
+
+broadcat address is how a MAC address table is built (Forwards broadcast frames to find mac address)
+
+DEFAULT time out of a mac address (300 seconds)
+
+The MAC address table is also called the switching table, or bridging table, or even sometime sthe content addressable memory (CAM) table. 
+Unicast frames are frames that have a unicast destination address, with the destination address being known. 
+Switches build the address table by listening to incoming frames and examining the SOURCE MAC address in the frame. If it does not contain a SOURCE MAC address, then it will write down the interface it came from. 
+
+The process of flooding occurs when there are no matching entries in the table, the switches foward the frame out to all interfaces (except the incoming interface). 
+
+STP: Spanning tree protocol, prevents against loops. It makes it so frames do not loop permanetly, causing it to make LAN usuable. 
+STP is needed because it causes each interface on a switch to settle into either a blocking state or a forwarding state. Blocking means that the interface cannot forward or receive data frames, while forwarding means
+that the interface can send and receive data frames. 
+
+To show a Switches MAC address table, use the "show mac address-table" Command 
+Use the "Show mac address-table dynamic" command to see all of the dynamically learned MAC addresses only. 
+Use the "erase startup-config" EXEC command to erase the startup config file
+Use the "Delete vlan.dat" EXEC command to delete the VLAN configuration details
+Use the "reload" EXEC command to reload the switch
+Configure the "hostname" command to change the hostname
+Show the status of interfaces with the "Show interfaces status" command
+
+Counters help list statistics about incoming and outgoing frames on the other interfaces. It lists the number of unicast, multicast, and broadcast frames while listing a total cyte count for those frames.
+
+If you want to look for specific mac addresses, you can just type "show mac address-table dynamic address 0200.1111.1111
+
+you can view a mac address by a specific port, by typing "Show mac address-table dynamic interface fastEthernet 0/1
+
+You can search mac addresses for specific vlans too typing "Show mac address-table dynamic vlan 1"
+
+Inactive timers on switches last 600 seconds. You can see by typing "Show mac address-table aging-time"
+To remove dynamic entries from the MAC address table, you can type "clear mac address-table dynamic". (You can do specifics too for vlan, interface, and mac address) 
